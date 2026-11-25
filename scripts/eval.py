@@ -94,7 +94,7 @@ def run_eval(model, tokenizer, rows, label: str):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--adapter", default="outputs/qlora-sql-expert")
+    parser.add_argument("--adapter", default="outputs/full-training")
     parser.add_argument("--n", type=int, default=200)
     parser.add_argument("--skip-base", action="store_true", help="only eval fine-tuned model")
     args = parser.parse_args()

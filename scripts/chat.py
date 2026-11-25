@@ -25,7 +25,7 @@ SYSTEM_PROMPT = (
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--adapter", default="outputs/qlora-sql-expert")
+    parser.add_argument("--adapter", default="outputs/full-training")
     args = parser.parse_args()
 
     bnb_config = BitsAndBytesConfig(

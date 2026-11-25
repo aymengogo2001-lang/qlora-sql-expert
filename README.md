@@ -2,7 +2,7 @@
 
 A hands-on fine-tuning project that adapts **Qwen2.5-1.5B-Instruct** for text-to-SQL: given a database schema and a natural-language question, generate a SQL query. The model was fine-tuned with **4-bit QLoRA** on an NVIDIA RTX 3060 with 6 GB VRAM.
 
-This repository contains the training and evaluation code. The generated dataset files, Python environment, and model adapter weights are intentionally not committed. The dataset can be rebuilt with the preparation script; the trained adapter will be published separately on Hugging Face (link to be added after publication).
+This repository contains the training and evaluation code. Generated dataset files, the Python environment, and model adapter weights are excluded from Git. Recreate the dataset and adapter locally using the commands below; the adapter is saved to `outputs/full-training`.
 
 ## Results
 
@@ -13,7 +13,7 @@ On a 200-example sample from the held-out test split, using greedy generation an
 | Qwen2.5-1.5B-Instruct (base) | 5% (10/200) |
 | Qwen2.5-1.5B-Instruct + QLoRA adapter | 77% (154/200) |
 
-Normalization removes Markdown code fences, ignores case and whitespace, and strips trailing semicolons. These are **exact-string match results**, not execution accuracy: logically equivalent SQL can be marked incorrect if written differently, and a matching string does not guarantee correctness for every database. Results are from the first 200 examples of the held-out split; run evaluation on all 500 before treating them as the final benchmark.
+Normalization removes Markdown code fences, ignores case and whitespace, and strips trailing semicolons. These are **exact-string match results**, not execution accuracy: logically equivalent SQL can be marked incorrect if written differently, and a matching string does not guarantee correctness for every database. The reported scores are a preliminary evaluation of the first 200 examples in the held-out split; they should not be interpreted as a full-test-set benchmark or a guarantee of correctness.
 
 Training used 77,577 training examples for 2 epochs, with a 500-example validation split. The saved training state reports 9,696 optimizer steps and final validation loss of 0.3836. The adapter has approximately 18.46 million trainable parameters (about 1.18% of the 1.56B total parameters).
 
@@ -68,17 +68,17 @@ venv/Scripts/python scripts/prepare_dataset.py
 # Train (requires the dataset files and the stated GPU setup)
 venv/Scripts/python scripts/train_qlora.py
 
-# Compare base model and adapter on the 200-example sample
-venv/Scripts/python scripts/eval.py --adapter PATH_TO_ADAPTER --n 200
+# Compare base model and locally trained adapter on the 200-example sample
+venv/Scripts/python scripts/eval.py --n 200
 
-# Evaluate the full 500-example held-out split
-venv/Scripts/python scripts/eval.py --adapter PATH_TO_ADAPTER --n 500
+# Evaluate all 500 examples in the held-out split
+venv/Scripts/python scripts/eval.py --n 500
 
 # Interactively generate SQL from a schema and question
-venv/Scripts/python scripts/chat.py --adapter PATH_TO_ADAPTER
+venv/Scripts/python scripts/chat.py
 ```
 
-Replace `PATH_TO_ADAPTER` with the local folder where you downloaded the adapter weights from the Hugging Face model repository.
+Both scripts default to the adapter saved by `train_qlora.py` at `outputs/full-training`. To use an adapter stored elsewhere, pass its local folder with `--adapter PATH`.
 
 ## Responsible use
 
@@ -86,4 +86,4 @@ Generated SQL can be wrong, costly, or unsafe. The interactive script only gener
 
 ## License and attribution
 
-Check the license and terms for the base model and dataset before redistribution. This project does not grant rights to the underlying model or dataset. Add a repository license only after choosing one that matches your intended use and the upstream terms. Cite the model and dataset when sharing results.
+No license is granted for this repository's code or adapter weights. The base model and dataset are third-party materials governed by their own terms; consult the [Qwen2.5 model card](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct) and the [dataset card](https://huggingface.co/datasets/b-mc2/sql-create-context) before reuse or redistribution. The model and dataset are cited above.
