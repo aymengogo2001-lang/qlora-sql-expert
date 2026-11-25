@@ -1,0 +1,23 @@
+# Python environments and bytecode
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Local environment variables and credentials
+.env
+.env.*
+!.env.example
+
+# Downloaded/generated dataset files (recreated by scripts/prepare_dataset.py)
+data/*.jsonl
+
+# Model weights, checkpoints, and local training outputs
+outputs/**
+!outputs/.gitkeep
+
+# Local installer logs and editor/OS files
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
